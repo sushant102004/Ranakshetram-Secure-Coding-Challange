@@ -3,10 +3,12 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const {ErrorClass, ErrorController} = require('./controllers/errorController')
+const keywordRoute = require('./routes/keywordRoutes')
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
 
 const app = express()
+app.use(express.json())
 
 mongoose.set('strictQuery', true)
 
@@ -27,6 +29,8 @@ app.get('/', (req, res) => {
         message: 'Route Working'
     })
 })
+
+app.use('/api/v1/keyword', keywordRoute)
 
 app.all('*', (req, res, next) => {
     next(new ErrorClass(`Route not found: ${req.originalUrl}`, 404))
