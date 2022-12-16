@@ -1,5 +1,6 @@
 const KeywordInformation = require('../models/informationModel')
 const {ErrorClass} = require('./errorController')
+const appModule = require('./../app')
 
 exports.addNewKeyword = async (req, res, next) => {
     const title = req.body.title
@@ -37,12 +38,27 @@ exports.addNewKeyword = async (req, res, next) => {
 }
 
 exports.getAllKeywordsData = async (req, res, next) => {
+    const redis = appModule.redis
     try {
+        const cachedKeywords = await redis.get('keywords')
+
+        if(cachedKeywords){
+            console.log('Showing data from cache')
+            res.status(200).json({
+                status: 'success',
+                keywords: JSON.parse(cachedKeywords)
+            })
+            return
+        }
+
         const keywords = await KeywordInformation.find()
 
         if(!keywords){
             return next(new ErrorClass('There are no keywords in database', 404))
         }
+
+        await redis.set('keywords', JSON.stringify(keywords))
+        console.log('Keywords saved in cache')
 
         res.status(200).json({
             status: 'success',
