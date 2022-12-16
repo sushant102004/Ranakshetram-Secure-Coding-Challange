@@ -7,6 +7,7 @@ exports.addNewKeyword = async (req, res, next) => {
     const imageUrl = req.body.imageUrl
     const dataSources = req.body.dataSources
     const sourceConfidence = req.body.sourceConfidence
+    const category = req.body.category
 
     if(!title || !description || !imageUrl || !dataSources || !sourceConfidence){
         return next(new ErrorClass('Invalid input provided', 404))
@@ -19,6 +20,7 @@ exports.addNewKeyword = async (req, res, next) => {
             imageUrl,
             dataSources,
             sourceConfidence,
+            category
         });
         res.status(200).json({
             status: 'success',

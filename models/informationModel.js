@@ -25,6 +25,11 @@ const keywordInformationSchema = new mongoose.Schema({
         required: [true, 'Source confidence is required']
     },
 
+    category: {
+        type: String,
+        required: [true, 'Category is required']
+    },
+
     dateCreated: {
         type: Date,
         default:  Date.now(),
