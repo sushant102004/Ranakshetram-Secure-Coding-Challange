@@ -38,18 +38,18 @@ exports.addNewKeyword = async (req, res, next) => {
 }
 
 exports.getAllKeywordsData = async (req, res, next) => {
-    const redis = appModule.redis
+    // const redis = appModule.redis
     try {
-        const cachedKeywords = await redis.get('keywords')
+        // const cachedKeywords = await redis.get('keywords')
 
-        if(cachedKeywords){
-            console.log('Showing data from cache')
-            res.status(200).json({
-                status: 'success',
-                keywords: JSON.parse(cachedKeywords)
-            })
-            return
-        }
+        // if(cachedKeywords){
+        //     console.log('Showing data from cache')
+        //     res.status(200).json({
+        //         status: 'success',
+        //         keywords: JSON.parse(cachedKeywords)
+        //     })
+        //     return
+        // }
 
         const keywords = await KeywordInformation.find()
 
@@ -57,8 +57,8 @@ exports.getAllKeywordsData = async (req, res, next) => {
             return next(new ErrorClass('There are no keywords in database', 404))
         }
 
-        await redis.set('keywords', JSON.stringify(keywords))
-        console.log('Keywords saved in cache')
+        // await redis.set('keywords', JSON.stringify(keywords))
+        // console.log('Keywords saved in cache')
 
         res.status(200).json({
             status: 'success',

@@ -16,7 +16,7 @@ app.use(responseTime())
 
 mongoose.set('strictQuery', true)
 
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
     () => {
         try {
             console.log('Connected To Database')
@@ -28,15 +28,15 @@ mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
 )
 
 
-const redis = new Redis({
-    // host: 'redis-14267.c264.ap-south-1-1.ec2.cloud.redislabs.com',
-    // port: 14267,
-    // password: process.env.REDIS_PASSWORD,
-    host: '127.0.0.1',
-    port: 6379,
-    connectionTimeout: 10000
-})
-console.log('Connected To Redis')
+// const redis = new Redis({
+//     // host: 'redis-14267.c264.ap-south-1-1.ec2.cloud.redislabs.com',
+//     // port: 14267,
+//     // password: process.env.REDIS_PASSWORD,
+//     host: '127.0.0.1',
+//     port: 6379,
+//     connectionTimeout: 10000
+// })
+// console.log('Connected To Redis')
 
 app.use('/api/v1/keyword', keywordRoute)
 
@@ -47,4 +47,4 @@ app.all('*', (req, res, next) => {
 
 app.use(ErrorController)
 
-exports.redis = redis
+// exports.redis = redis
