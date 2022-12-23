@@ -1,6 +1,6 @@
 const KeywordInformation = require('../models/informationModel')
 const {ErrorClass} = require('./errorController')
-const appModule = require('./../app')
+const appModule = require('..')
 
 exports.addNewKeyword = async (req, res, next) => {
     const title = req.body.title
