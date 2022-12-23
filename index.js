@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const {ErrorClass, ErrorController} = require('./controllers/errorController')
 const keywordRoute = require('./routes/keywordRoutes');
 const responseTime = require('response-time');
+const cors = require('cors');
 const Redis = require('ioredis')
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
@@ -13,6 +14,7 @@ const app = express()
 
 app.use(express.json())
 app.use(responseTime())
+app.use(cors())
 
 mongoose.set('strictQuery', true)
 
