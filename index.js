@@ -38,6 +38,12 @@ mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
 // })
 // console.log('Connected To Redis')
 
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'Endpoint Working'
+    })
+})
+
 app.use('/api/v1/keyword', keywordRoute)
 
 app.all('*', (req, res, next) => {
