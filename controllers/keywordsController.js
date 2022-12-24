@@ -72,3 +72,19 @@ exports.getAllKeywordsData = async (req, res, next) => {
     }
 
 }
+
+
+exports.searchNewKeyword = async (req, res, next) => {
+    try {
+        res.status(200).json({
+            status: 'success',
+            message: 'Function to be implemented.',
+            keyword : req.params.keyword
+        })
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: err
+        })
+    }
+}
