@@ -18,7 +18,7 @@ app.use(cors())
 
 mongoose.set('strictQuery', true)
 
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
     () => {
         try {
             console.log('Connected To Database')
