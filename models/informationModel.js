@@ -15,7 +15,7 @@ const keywordInformationSchema = new mongoose.Schema({
         type: String,
     },
 
-    dataSources: {
+    dataSource: {
         type: String,
         required: [true, 'Data Sources are required']
     },
