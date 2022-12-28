@@ -8,6 +8,8 @@ const responseTime = require('response-time');
 const cors = require('cors');
 const cron = require('node-cron')
 const utils = require('./utils/trendingData')
+const axios = require('axios')
+const KeywordInformation = require('./models/informationModel')
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
 
@@ -19,7 +21,7 @@ app.use(cors())
 
 mongoose.set('strictQuery', true)
 
-mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
     () => {
         try {
             console.log('Connected To Database')
@@ -49,8 +51,40 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/keyword', keywordRoute)
 
-cron.schedule('* * * * *', () => {
-    utils.updateTrendingData()
+// cron.schedule('* * * * *', () => {
+//     utils.updateTrendingData()
+// })
+
+app.get('/api/v1/updateTrendingData', async (req, res, next) => {
+    const apiURL = 'https://newssource.pythonanywhere.com/trendingNews'
+
+    await axios.get(apiURL).then(function (response) {
+        const data = response.data
+        data.map(async el => {
+            const existingKeyword = await KeywordInformation.findOne({ title: el.title })
+            if(!existingKeyword){
+                await KeywordInformation.create({
+                    title: el.title,
+                    description: el.description,
+                    imageUrl: el.imageUrl,
+                    dataSource: el.dataSource,
+                    sourceConfidence: el.sourceConfidence,
+                    category: el.category
+                })
+                console.log('Treding Data Updated')
+            } else {
+                console.log('Data already present')
+            }
+        })
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Data updated successfully'
+        })
+    }).catch(function (err) {
+        console.log(err)
+        return next(err)
+    })
 })
 
 app.all('*', (req, res, next) => {
