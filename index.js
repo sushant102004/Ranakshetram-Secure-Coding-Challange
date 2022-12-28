@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/keyword', keywordRoute)
 
-cron.schedule('* * * *', () => {
+cron.schedule('* * * * *', () => {
     utils.updateTrendingData()
 })
 
