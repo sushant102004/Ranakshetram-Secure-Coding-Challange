@@ -6,7 +6,8 @@ const {ErrorClass, ErrorController} = require('./controllers/errorController')
 const keywordRoute = require('./routes/keywordRoutes');
 const responseTime = require('response-time');
 const cors = require('cors');
-const Redis = require('ioredis')
+const cron = require('node-cron')
+const utils = require('./utils/trendingData')
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
 
@@ -18,7 +19,7 @@ app.use(cors())
 
 mongoose.set('strictQuery', true)
 
-mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
     () => {
         try {
             console.log('Connected To Database')
@@ -47,6 +48,10 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/keyword', keywordRoute)
+
+cron.schedule('* * * * *', () => {
+    utils.updateTrendingData()
+})
 
 app.all('*', (req, res, next) => {
     next(new ErrorClass(`Route not found: ${req.originalUrl}`, 404))
