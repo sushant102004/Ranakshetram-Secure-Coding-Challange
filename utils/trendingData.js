@@ -6,7 +6,7 @@ const KeywordInformation = require('./../models/informationModel')
 
 exports.updateTrendingData = async () => {
     mongoose.set('strictQuery', false)
-    mongoose.connect('mongodb://localhost:27017/ranakshetramDB', {useNewUrlParser: true}).then(
+    mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
         () => {
             try {
                 console.log('Connected To Database')
@@ -38,5 +38,6 @@ exports.updateTrendingData = async () => {
         })
     }).catch(function (err) {
         console.log(err)
+        return next(err)
     })
 }

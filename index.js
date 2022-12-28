@@ -19,7 +19,7 @@ app.use(cors())
 
 mongoose.set('strictQuery', true)
 
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_CLOUD, {useNewUrlParser: true}).then(
     () => {
         try {
             console.log('Connected To Database')
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/keyword', keywordRoute)
 
-cron.schedule('* * * * *', () => {
+cron.schedule('* * * *', () => {
     utils.updateTrendingData()
 })
 
