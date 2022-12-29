@@ -1,6 +1,7 @@
 const KeywordInformation = require('../models/informationModel')
 const {ErrorClass} = require('./errorController')
 const appModule = require('..')
+const { default: axios } = require('axios')
 
 exports.addNewKeyword = async (req, res, next) => {
     const title = req.body.title
@@ -76,10 +77,39 @@ exports.getAllKeywordsData = async (req, res, next) => {
 
 exports.searchNewKeyword = async (req, res, next) => {
     try {
-        res.status(200).json({
-            status: 'success',
-            message: 'Function to be implemented.',
-            keyword : req.params.keyword
+
+        const keyword = req.params.keyword
+        const result = await axios.get(`https://newssource.pythonanywhere.com/query/${keyword}`)
+        .then((response) => {
+            if(!response.data){
+                return next(new ErrorClass('No results found', 404))
+            }
+            const data = response.data
+            data.map(async el => {
+                const existingKeyword = await KeywordInformation.findOne({title: el.title})
+                if(!existingKeyword) {
+                    await KeywordInformation.create({
+                        title: el.title,
+                        description: el.description,
+                        imageUrl: el.imageUrl,
+                        dataSource: el.dataSource,
+                        sourceConfidence: el.sourceConfidence,
+                        category: el.category
+                    })
+                    console.log('Adding Search Data To DB')
+                } else {
+                    console.log('Duplicate Data Skipped')
+                }
+            })
+            res.status(200).json({
+                status: 'success',
+                result: data
+            })
+        }).catch(function(err) {
+            res.status(500).json({
+                status: 'error',
+                message: err.message
+            })
         })
     } catch (err) {
         res.status(400).json({
